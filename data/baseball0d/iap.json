@@ -1,0 +1,15 @@
+{
+	"EnableUploadPhoto":1,
+	"OneDollarAmount":30,
+	"SpecialOfferText":{
+		"en":"World Series Offer",
+		"ja":"特別セール",
+		"es":"Oferta especial"
+	},
+	"NoticeContent":{
+		"en":"World Series Offer",
+		"ja":"",
+		"es":""
+	},
+	"discordWebHook":"https://discord.com/api/webhooks/1427549880007655455/Tb7pTL1Em40D67jH-NEsdGXMd-guKGDTbjs1PbPbl3Z-yvOtTmHx89t3aqPeQiacALvF"
+}
