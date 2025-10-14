@@ -1,0 +1,8 @@
+Notice1
+|Pitcher "Ohey" has pitched 9 Innings 
+and exhausted. Wait for a while or give 
+him juice. 
+|Ojey lanzó 9 entradas y está reventado.
+ ¿Esperar o darle jugo?
+|オヘイは9回投球で疲労困憊。少し待つ
+か、ケミカルを与えて回復を図れ。
