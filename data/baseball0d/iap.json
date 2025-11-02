@@ -1,10 +1,10 @@
 {
 	"EnableUploadPhoto":1,
-	"OneDollarAmount":120,
+	"OneDollarAmount":10,
 	"SpecialOfferText":{
-		"en":"World Series Offer",
-		"ja":"ワールドシリーズセール",
-		"es":"Oferta de la Serie Mundial"
+		"en":"",
+		"ja":"",
+		"es":""
 	},
 	"discordWebHook":"https://discord.com/api/webhooks/1427549880007655455/Tb7pTL1Em40D67jH-NEsdGXMd-guKGDTbjs1PbPbl3Z-yvOtTmHx89t3aqPeQiacALvF"
 }
