@@ -1,12 +1,13 @@
 Notice1
 |Pitcher "Gaki" has pitched 9 Innings 
 and exhausted. Wait for a while or give 
-him juice.Juice may possibly make him 
-rampage.
-|Gaki está agotado tras nueve entradas. 
-Que descanse tantito. Si usamos el 
-químico, se recupera rápido, pero 
-podría volverse loco.
+him juice.Juice may possibly turn him
+into a gorilla.
+|El lanzador "Gaki" ha lanzado 9 
+entradas y está exhausto. Espera 
+un rato o dale jugo. El jugo 
+podría convertirlo en un gorila.
 |ガキくんは9回投球でほんまに疲れま
 した。一旦休憩や。ドリンク剤を使え
-ばすぐ回復できますが暴れ出すかも。
+ばすぐ回復できますがゴリラになる
+かも知れません。

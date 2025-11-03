@@ -1,13 +1,13 @@
 Notice2
 |Pitcher "Eroji" has pitched 9 Innings 
 and exhausted. Wait for a while or give 
-him juice.Juice may possibly make him 
-rampage.
-|Eroji está agotado tras nueve entradas. 
-Que descanse tantito. Si usamos el 
-químico, se recupera rápido, pero 
-podría volverse loco.
+him juice. Juice may possibly turn him 
+into a naked lady.
+|El lanzador "Eroji" ha lanzado 9 
+entradas y está exhausto. Espera un 
+rato o dale jugo. El jugo podría 
+convertirlo en una mujer desnuda.
 |エロージさんは9回投球でほんまに疲
 れました。一旦休憩や。ドリンク剤を
-使えばすぐ回復できますが暴れ出す
+使えばすぐ回復できますがラフになる
 かもしれません。
