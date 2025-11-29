@@ -1,5 +1,6 @@
 {
 	"EnableUploadPhoto":1,
+	"EnableUploadStartEnd":1,
 	"OneDollarAmount":10,
 	"SpecialOfferText":{
 		"en":"",
