@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Solomon Tech — Elegant Input Method</title>
+  <meta name="description" content="A small, efficient input method inspired by Farsi letters — designed to make typing Japanese simpler and cleaner.">
+  <meta property="og:title" content="Solomon Tech — Elegant Input Method">
+  <meta property="og:description" content="A compact consonant-first input method for Japanese, inspired by Farsi." />
+  <meta property="og:type" content="website">
+
+  <style>
+    /* Base colors (brand) */
+    :root{
+      --bg: rgb(33,34,32);
+      --card: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.78);
+      --accent: #28a745; /* green */
+      --glass: rgba(255,255,255,0.03);
+      --max-width: 900px;
+      --radius: 14px;
+      --gap: 20px;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,var(--bg) 0%, #181818 100%);
+      color: #fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:36px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--max-width);
+      padding:28px;
+      background: linear-gradient(180deg,var(--card), var(--glass));
+      border-radius:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .logo{
+      width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:18px
+    }
+
+    h1{font-size:28px;margin:0}
+    p.lead{color:var(--muted);margin-top:8px;margin-bottom:0}
+
+    main{display:grid;grid-template-columns:1fr;gap:var(--gap);margin-top:18px}
+
+    .card{
+      padding:18px;border-radius:var(--radius);background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);
+    }
+
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .feature{background:transparent;padding:14px;border-radius:12px}
+    .feature h3{margin:0 0 6px 0;font-size:16px}
+    .feature p{margin:0;color:var(--muted);font-size:14px}
+
+    .how{font-size:15px;color:var(--muted)}
+
+    .cta{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:8px
+    }
+
+    .btn{
+      --pad:12px 18px;
+      display:inline-block;padding:var(--pad);border-radius:12px;font-weight:600;text-decoration:none;color:#fff;background:var(--accent);box-shadow:0 6px 18px rgba(40,167,69,0.12);
+    }
+
+    .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
+
+    footer{margin-top:20px;color:rgba(255,255,255,0.45);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+
+    /* Responsive tweaks */
+    @media (max-width:600px){
+      body{padding:20px}
+      h1{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <div class="logo" aria-hidden>あ</div>
+      <div>
+        <h1>Solomon — A compact input method</h1>
+        <p class="lead">A consonant-first Japanese input inspired by Farsi letters — fewer symbols, clearer typing.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2 style="margin-top:0">What it solves</h2>
+        <p class="how">Written Japanese mixes three systems (kanji, hiragana, katakana) which can make typing and reading messy. Solomon introduces a compact approach: a consonant-first input using a small set of Farsi-derived letters tailored for Japanese, reducing visual clutter and keystrokes.</p>
+
+        <div style="margin-top:14px" class="cta">
+          <a class="btn" href="#download">Try the App</a>
+          <a class="btn secondary" href="#guide">Read the Guide</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 style="margin-top:0">Key features</h2>
+        <div class="features">
+          <div class="feature">
+            <h3>Minimal alphabet</h3>
+            <p>Only the essential consonant shapes — easy to learn, fast to type.</p>
+          </div>
+          <div class="feature">
+            <h3>Context-aware</h3>
+            <p>Smart mapping for kana combinations and common Japanese syllables.</p>
+          </div>
+          <div class="feature">
+            <h3>Compact keyboard</h3>
+            <p>Designed for mobile: fewer keys, larger hit targets, faster input.</p>
+          </div>
+          <div class="feature">
+            <h3>Privacy-focused</h3>
+            <p>No cloud processing by default — all transliteration happens locally.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="guide">
+        <h2 style="margin-top:0">How it works</h2>
+        <ol class="how">
+          <li>Type a consonant shape (based on simplified Farsi letters).</li>
+          <li>Select vowel context when needed — only five vowels to choose from.</li>
+          <li>System transliterates into kana/kanji candidates intelligently.</li>
+        </ol>
+        <p style="margin-top:12px;color:var(--muted);font-size:14px">This approach reduces on-screen clutter and speeds up composition — especially for users comfortable with consonant-first alphabets.</p>
+      </section>
+
+      <section class="card" id="download">
+        <h2 style="margin-top:0">Get the app</h2>
+        <p class="how">Available on the App Store. Tap below to open the app page and leave feedback.</p>
+        <div style="margin-top:12px" class="cta">
+          <a class="btn" href="https://apps.apple.com/app/id0000000000" target="_blank" rel="noopener">Open on App Store</a>
+          <a class="btn secondary" href="mailto:hello@solomonte.ch">Contact</a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div>© Solomon Tech</div>
+      <div>Made for Japanese users · Minimal · Private</div>
+    </footer>
+  </div>
+</body>
+</html>
