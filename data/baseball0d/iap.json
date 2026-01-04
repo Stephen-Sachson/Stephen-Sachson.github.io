@@ -1,11 +1,11 @@
 {
 	"EnableUploadPhoto":1,
 	"EnableUploadStartEnd":1,
-	"OneDollarAmount":26,
+	"OneDollarAmount":63,
 	"SpecialOfferText":{
-		"en":"New Year Offer",
-		"ja":"新年特別オファー",
-		"es":"Oferta de Año Nuevo"
+		"en":"Nicolás Maduro Offer",
+		"ja":"ニコラス・マドゥロオファー",
+		"es":"Oferta de Nicolás Maduro"
 	},
 	"discordWebHook":"https://discord.com/api/webhooks/1444496729545117696/9jqbZ3o4fkSx-CIW7Gomty7SRE2dC-kjL7MDO1KsKwG-FVdgPlEMH8yhM3M0sgURBeAz"
 }
