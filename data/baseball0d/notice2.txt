@@ -1,13 +1,12 @@
 Notice2
 |Pitcher "Eroji" has pitched 9 Innings 
 and exhausted. Wait for a while or give 
-him juice. Juice may possibly turn him 
-into a naked lady.
-|El lanzador "Eroji" ha lanzado 9 
-entradas y está exhausto. Espera un 
-rato o dale jugo. El jugo podría 
-convertirlo en una mujer desnuda.
-|エロージさんは9回投球でほんまに疲
-れました。一旦休憩や。ドリンク剤を
-使えばすぐ回復できますがラフになる
-かもしれません。
+him juice. Bonus juice for 10 runs.
+|El pitcher “Eroji” lanzó 9 entradas
+y ya está agotado.
+Espera un rato o dale jugo.
+Jugo extra por 10 carreras.
+|エロージさんは9イニング投げて、
+もうヘトヘトやで。
+ちょっと待つか、ドリンク剤あげてな。
+10点取ったらボーナスドリンク剤やで！
