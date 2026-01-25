@@ -1,7 +1,8 @@
 Notice1
 |Pitcher "Gaki" has pitched 9 Innings 
 and exhausted. Wait for a while or give 
-him juice. Bonus juice for 10 runs.
+him juice. Bonus juice for 10 runs
+(Android only, iOS update soon).
 |El pitcher “Gaki” lanzó 9 entradas
 y ya está agotado.
 Espera un rato o dale jugo.
