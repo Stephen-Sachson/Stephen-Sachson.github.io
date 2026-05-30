@@ -1,0 +1,193 @@
+:root {
+  color-scheme: dark;
+  --bg: #12130f;
+  --panel: #20251b;
+  --panel-edge: #59614a;
+  --screen: #07120b;
+  --grid: rgba(122, 180, 88, 0.16);
+  --snake: #8ee05f;
+  --snake-head: #d7ff82;
+  --food: #ff5555;
+  --text: #eff6db;
+  --muted: #a7b28d;
+  --button: #343c2d;
+  --button-hover: #46523a;
+  font-family: "Courier New", Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(102, 150, 80, 0.2), transparent 34%),
+    linear-gradient(135deg, #181b14 0%, var(--bg) 48%, #080908 100%);
+  color: var(--text);
+}
+
+.arcade-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.cabinet {
+  width: min(94vw, 760px);
+  padding: 22px;
+  border: 4px solid var(--panel-edge);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #293020, var(--panel));
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.top-bar,
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0 #10150d;
+}
+
+.scoreboard {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.scoreboard span {
+  min-width: 94px;
+  padding: 8px 10px;
+  border: 2px solid var(--panel-edge);
+  background: #11170f;
+  text-align: center;
+}
+
+.screen-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 20px 0;
+  border: 6px solid #10150d;
+  background: var(--screen);
+  box-shadow: inset 0 0 28px rgba(142, 224, 95, 0.14);
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(7, 18, 11, 0.72);
+  transition: opacity 120ms ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay strong {
+  font-size: clamp(2rem, 8vw, 5rem);
+  text-transform: uppercase;
+}
+
+.overlay span {
+  color: var(--muted);
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+}
+
+button {
+  min-width: 108px;
+  border: 2px solid var(--panel-edge);
+  border-radius: 4px;
+  padding: 11px 14px;
+  background: var(--button);
+  color: var(--text);
+  font: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  background: var(--button-hover);
+  outline: 2px solid var(--snake-head);
+  outline-offset: 2px;
+}
+
+.keys {
+  display: flex;
+  gap: 6px;
+}
+
+kbd {
+  min-width: 36px;
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--panel-edge);
+  border-radius: 4px;
+  background: #12170f;
+  color: var(--snake-head);
+  font-weight: 700;
+  box-shadow: 0 3px 0 #050705;
+}
+
+@media (max-width: 560px) {
+  .arcade-shell {
+    padding: 12px;
+  }
+
+  .cabinet {
+    padding: 14px;
+  }
+
+  .top-bar,
+  .controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scoreboard,
+  .keys {
+    justify-content: stretch;
+  }
+
+  .scoreboard span,
+  .controls button,
+  .keys kbd {
+    flex: 1;
+  }
+}
