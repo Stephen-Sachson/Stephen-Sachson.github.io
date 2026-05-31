@@ -7,6 +7,7 @@ const overlayTitle = document.querySelector("#overlay-title");
 const overlayCopy = document.querySelector("#overlay-copy");
 const restartButton = document.querySelector("#restart");
 const pauseButton = document.querySelector("#pause");
+const touchButtons = document.querySelectorAll("[data-direction]");
 
 const tileCount = 24;
 const tileSize = canvas.width / tileCount;
@@ -27,6 +28,24 @@ let isRunning;
 let isPaused;
 let isGameOver;
 
+const directions = {
+  up: { x: 0, y: -1 },
+  left: { x: -1, y: 0 },
+  down: { x: 0, y: 1 },
+  right: { x: 1, y: 0 },
+};
+
+const keyDirections = {
+  w: directions.up,
+  a: directions.left,
+  s: directions.down,
+  d: directions.right,
+  arrowup: directions.up,
+  arrowleft: directions.left,
+  arrowdown: directions.down,
+  arrowright: directions.right,
+};
+
 bestEl.textContent = best;
 resetGame();
 draw();
@@ -42,7 +61,7 @@ function resetGame() {
   scoreEl.textContent = score;
   pauseButton.textContent = "Pause";
   placeFood();
-  showOverlay("Snake", "Press W, A, S, or D to start");
+  showOverlay("Snake", "Use WASD or the D-pad to start");
   stopLoop();
   draw();
 }
@@ -175,7 +194,7 @@ function endGame() {
   isGameOver = true;
   isRunning = false;
   stopLoop();
-  showOverlay("Game Over", "Press Restart or any WASD key");
+  showOverlay("Game Over", "Press Restart or choose a direction");
 }
 
 function setDirection(nextDirection) {
@@ -224,22 +243,26 @@ function hideOverlay() {
 
 window.addEventListener("keydown", (event) => {
   const key = event.key.toLowerCase();
-  const directions = {
-    w: { x: 0, y: -1 },
-    a: { x: -1, y: 0 },
-    s: { x: 0, y: 1 },
-    d: { x: 1, y: 0 },
-  };
 
-  if (directions[key]) {
+  if (keyDirections[key]) {
     event.preventDefault();
-    setDirection(directions[key]);
+    setDirection(keyDirections[key]);
   }
 
   if (event.code === "Space") {
     event.preventDefault();
     togglePause();
   }
+});
+
+touchButtons.forEach((button) => {
+  button.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    const nextDirection = directions[button.dataset.direction];
+    if (nextDirection) {
+      setDirection(nextDirection);
+    }
+  });
 });
 
 restartButton.addEventListener("click", resetGame);

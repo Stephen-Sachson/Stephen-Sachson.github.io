@@ -24,7 +24,7 @@
           <canvas id="game" width="600" height="600" aria-label="Snake play field"></canvas>
           <div id="overlay" class="overlay">
             <strong id="overlay-title">Snake</strong>
-            <span id="overlay-copy">Press W, A, S, or D to start</span>
+            <span id="overlay-copy">Use WASD or the D-pad to start</span>
           </div>
         </div>
 
@@ -34,6 +34,13 @@
           <div class="keys" aria-label="Keyboard controls">
             <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
           </div>
+        </div>
+
+        <div class="touch-pad" aria-label="Touch controls">
+          <button class="touch-button touch-up" type="button" data-direction="up" aria-label="Move up">&#9650;</button>
+          <button class="touch-button touch-left" type="button" data-direction="left" aria-label="Move left">&#9664;</button>
+          <button class="touch-button touch-right" type="button" data-direction="right" aria-label="Move right">&#9654;</button>
+          <button class="touch-button touch-down" type="button" data-direction="down" aria-label="Move down">&#9660;</button>
         </div>
       </section>
     </main>

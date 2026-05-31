@@ -26,6 +26,7 @@ body {
     radial-gradient(circle at 50% 12%, rgba(102, 150, 80, 0.2), transparent 34%),
     linear-gradient(135deg, #181b14 0%, var(--bg) 48%, #080908 100%);
   color: var(--text);
+  touch-action: manipulation;
 }
 
 .arcade-shell {
@@ -152,6 +153,10 @@ button:focus-visible {
   gap: 6px;
 }
 
+.touch-pad {
+  display: none;
+}
+
 kbd {
   min-width: 36px;
   min-height: 36px;
@@ -189,5 +194,72 @@ kbd {
   .controls button,
   .keys kbd {
     flex: 1;
+  }
+}
+
+@media (pointer: coarse), (max-width: 760px) {
+  .touch-pad {
+    width: min(68vw, 230px);
+    margin: 18px auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .touch-button {
+    min-width: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-width: 3px;
+    border-radius: 6px;
+    color: var(--snake-head);
+    font-size: clamp(1.25rem, 7vw, 2rem);
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .touch-button:active {
+    translate: 0 2px;
+    background: #536242;
+  }
+
+  .touch-up {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .touch-left {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .touch-right {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .touch-down {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 560px) {
+  .screen-wrap {
+    margin: 14px 0;
+  }
+
+  .controls {
+    gap: 10px;
+  }
+
+  .keys {
+    display: none;
   }
 }
