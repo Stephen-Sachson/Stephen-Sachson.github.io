@@ -130,13 +130,14 @@ canvas {
 }
 
 button {
-  min-width: 108px;
+  min-width: 86px;
   border: 2px solid var(--panel-edge);
   border-radius: 4px;
-  padding: 11px 14px;
+  padding: 8px 10px;
   background: var(--button);
   color: var(--text);
   font: inherit;
+  font-size: 0.85rem;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -151,6 +152,19 @@ button:focus-visible {
 .keys {
   display: flex;
   gap: 6px;
+  margin-inline: auto;
+}
+
+#restart {
+  order: 1;
+}
+
+.keys {
+  order: 2;
+}
+
+#pause {
+  order: 3;
 }
 
 .touch-pad {
@@ -179,10 +193,14 @@ kbd {
     padding: 14px;
   }
 
-  .top-bar,
-  .controls {
+  .top-bar {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .controls {
+    flex-direction: row;
+    align-items: center;
   }
 
   .scoreboard,
@@ -257,6 +275,10 @@ kbd {
 
   .controls {
     gap: 10px;
+  }
+
+  .controls button {
+    flex: 0 0 auto;
   }
 
   .keys {
