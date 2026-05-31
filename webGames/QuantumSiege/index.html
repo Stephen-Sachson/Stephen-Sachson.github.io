@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Siege</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hud" aria-label="Game controls and status">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <div>
+            <h1>Quantum Siege</h1>
+            <p>Plan four turns ahead. One bad route collapses the whole front.</p>
+          </div>
+        </div>
+
+        <div class="stats" aria-label="Run status">
+          <div>
+            <span>Cycle</span>
+            <strong id="cycle">1</strong>
+          </div>
+          <div>
+            <span>Integrity</span>
+            <strong id="integrity">24</strong>
+          </div>
+          <div>
+            <span>Core</span>
+            <strong id="core">0</strong>
+          </div>
+          <div>
+            <span>Forecast</span>
+            <strong id="forecast">4</strong>
+          </div>
+        </div>
+
+        <div class="controls" aria-label="Actions">
+          <button id="undo" type="button" title="Undo last move">
+            <span aria-hidden="true">↶</span>
+            <span>Undo</span>
+          </button>
+          <button id="commit" type="button" title="Commit planned sequence">
+            <span aria-hidden="true">✓</span>
+            <span>Commit</span>
+          </button>
+          <button id="newGame" type="button" title="Start a new grid">
+            <span aria-hidden="true">↻</span>
+            <span>New</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="game">
+        <aside class="panel left-panel" aria-label="Available commands">
+          <div class="panel-head">
+            <h2>Command Deck</h2>
+            <span id="handCount">5</span>
+          </div>
+          <div id="hand" class="hand"></div>
+        </aside>
+
+        <section class="board-wrap" aria-label="Tactical board">
+          <div id="board" class="board"></div>
+        </section>
+
+        <aside class="panel right-panel" aria-label="Planning and threats">
+          <div class="panel-head">
+            <h2>Planned Line</h2>
+            <span id="planScore">0</span>
+          </div>
+          <ol id="plan" class="plan"></ol>
+
+          <div class="panel-head threat-head">
+            <h2>Threat Queue</h2>
+            <span id="threatLevel">0</span>
+          </div>
+          <div id="threats" class="threats"></div>
+        </aside>
+      </section>
+
+      <section class="log" aria-live="polite">
+        <strong id="messageTitle">Calculate the line.</strong>
+        <span id="message">Select commands, then commit exactly four moves before the enemies breach the core.</span>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
