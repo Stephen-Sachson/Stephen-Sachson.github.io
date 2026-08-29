@@ -4,7 +4,7 @@
 	"OneDollarAmount":20,
 	"SpecialOfferText":{
 		"en":"50% OFF! Ends soon",
-		"ja":"半額セール！まもなく終了",
+		"ja":"お得！半額セール！まもなく終了",
 		"es":"50% DE DESCUENTO! Termina pronto"
 	},
 	"discordWebHook":"https://discord.com/api/webhooks/1444496729545117696/9jqbZ3o4fkSx-CIW7Gomty7SRE2dC-kjL7MDO1KsKwG-FVdgPlEMH8yhM3M0sgURBeAz"
