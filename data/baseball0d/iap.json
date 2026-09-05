@@ -1,7 +1,7 @@
 {
 	"EnableUploadPhoto":1,
 	"EnableUploadStartEnd":1,
-	"OneDollarAmount":20,
+	"OneDollarAmount":10,
 	"SpecialOfferText":{
 		"en":"50% OFF! Ends soon",
 		"ja":"お得！半額セール！まもなく終了",
