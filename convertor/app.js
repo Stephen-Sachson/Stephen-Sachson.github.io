@@ -27,6 +27,8 @@ const vowelMarks = {
   n: "\u05b0"
 };
 
+const hebrewFinalForms = { "כ": "ך", "מ": "ם", "נ": "ן", "פ": "ף", "צ": "ץ" };
+
 const kanaMap = {
   あ: { arabic: "ا", hebrew: "א" },
   い: { arabic: "ي", hebrew: "י" },
@@ -130,15 +132,50 @@ function katakanaToHiragana(value) {
     .join("");
 }
 
+function getLongVowelKana(character) {
+  const vowel = getKanaVowel(character);
+
+  if (vowel === "a") return "a";
+  if (vowel === "i" || vowel === "e") return "i";
+  if (vowel === "u" || vowel === "o") return "u";
+
+  return "";
+}
+
+function getLongVowelLetter(character, target) {
+  const vowel = getLongVowelKana(character);
+
+  if (target === "arabic") {
+    if (vowel === "a") return "ا";
+    if (vowel === "i") return "ي";
+    if (vowel === "u") return "و";
+  }
+
+  if (target === "hebrew") {
+    if (vowel === "a") return "א";
+    if (vowel === "i") return "י";
+    if (vowel === "u") return "ו";
+  }
+
+  return "";
+}
+
 function convertKana(value, target) {
   if (target === "hebrew") {
     return convertHebrew(value);
   }
 
-  return [...katakanaToHiragana(value)]
-    .map((character) => {
-      if (smallKana.has(character) || character === "ー") {
+  const characters = [...katakanaToHiragana(value)];
+
+  return characters
+    .map((character, index) => {
+      if (smallKana.has(character)) {
         return "";
+      }
+
+      if (character === "ー") {
+        const previousCharacter = characters[index - 1];
+        return getLongVowelLetter(previousCharacter, target);
       }
 
       return kanaMap[character]?.[target] ?? character;
@@ -148,11 +185,11 @@ function convertKana(value, target) {
 
 function getKanaVowel(character) {
   if ("あかさたなはまやらわがざだばぱ".includes(character)) return "a";
-  if ("きしちにひみりぎじぢびぴ".includes(character)) return "i";
-  if ("くすつぬふむゆるぐずづぶぷゔ".includes(character)) return "u";
+  if ("きにひみりぎびぴ".includes(character)) return "i";
+  if ("くすぬふむゆるぐずづぶぷゔ".includes(character)) return "u";
   if ("えけせてねへめれげぜでべぺ".includes(character)) return "e";
   if ("おこそとのほもよろをごぞどぼぽ".includes(character)) return "o";
-  if ("ん".includes(character)) return "n";
+  if ("んっ".includes(character)) return "n";
   return "";
 }
 
@@ -173,12 +210,30 @@ function convertHebrew(value) {
 
   return characters
     .map((character, index) => {
-      if (smallKana.has(character) || character === "ー") {
+      if (smallKana.has(character)) {
         return "";
       }
 
-      const letter = kanaMap[character]?.hebrew ?? character;
-      const mark = kanaMap[character] ? getHebrewMark(character, characters[index + 1]) : "";
+      if (character === "ー") {
+        const previousCharacter = characters[index - 1];
+        return getLongVowelLetter(previousCharacter, "hebrew");
+      }
+
+      let letter = kanaMap[character]?.hebrew ?? character;
+      const nextCharacter = characters[index + 1];
+
+      // Use Hebrew final forms when this is the end of a word.
+      if (
+        hebrewFinalForms[letter] &&
+        (nextCharacter === undefined || /\s/.test(nextCharacter))
+      ) {
+        letter = hebrewFinalForms[letter];
+      }
+
+      const mark = kanaMap[character]
+        ? getHebrewMark(character, nextCharacter)
+        : "";
+
       return letter + mark;
     })
     .join("");
