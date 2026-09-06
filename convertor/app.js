@@ -1,16 +1,31 @@
 const sourceText = document.querySelector("#sourceText");
 const arabicText = document.querySelector("#arabicText");
 const hebrewText = document.querySelector("#hebrewText");
+const hebrewVowelsButton = document.querySelector("#hebrewVowelsButton");
 const clearButton = document.querySelector("#clearButton");
 const statusText = document.querySelector("#statusText");
 const copyButtons = document.querySelectorAll("[data-copy]");
 
 let conversionTimer = null;
+let showHebrewVowels = false;
 
 const katakanaStart = 0x30a1;
 const katakanaEnd = 0x30f6;
 const hiraganaOffset = 0x60;
-const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "っ", "ゕ", "ゖ"]);
+const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "ゕ", "ゖ"]);
+const reducedVowels = {
+  ゃ: "\u05b2",
+  ゅ: "\u05b1",
+  ょ: "\u05b3"
+};
+const vowelMarks = {
+  a: "\u05b7",
+  i: "\u05b4",
+  u: "\u05b6",
+  e: "\u05b5",
+  o: "\u05b8",
+  n: "\u05b0"
+};
 
 const kanaMap = {
   あ: { arabic: "ا", hebrew: "א" },
@@ -32,8 +47,8 @@ const kanaMap = {
   そ: { arabic: "س", hebrew: "ס" },
 
   た: { arabic: "ت", hebrew: "ט" },
-  ち: { arabic: "تش", hebrew: "צ" },
-  つ: { arabic: "تس", hebrew: "צ" },
+  ち: { arabic: "چ", hebrew: "ח" },
+  つ: { arabic: "ث", hebrew: "צ" },
   て: { arabic: "ت", hebrew: "ט" },
   と: { arabic: "ت", hebrew: "ט" },
 
@@ -68,6 +83,7 @@ const kanaMap = {
   わ: { arabic: "و", hebrew: "ו" },
   を: { arabic: "و", hebrew: "ו" },
   ん: { arabic: "ن", hebrew: "נ" },
+  っ: { arabic: "ع", hebrew: "ע" },
 
   が: { arabic: "غ", hebrew: "ג" },
   ぎ: { arabic: "غ", hebrew: "ג" },
@@ -76,7 +92,7 @@ const kanaMap = {
   ご: { arabic: "غ", hebrew: "ג" },
 
   ざ: { arabic: "ز", hebrew: "ז" },
-  じ: { arabic: "ج", hebrew: "ג" },
+  じ: { arabic: "ج", hebrew: "ת" },
   ず: { arabic: "ز", hebrew: "ז" },
   ぜ: { arabic: "ز", hebrew: "ז" },
   ぞ: { arabic: "ز", hebrew: "ז" },
@@ -115,6 +131,10 @@ function katakanaToHiragana(value) {
 }
 
 function convertKana(value, target) {
+  if (target === "hebrew") {
+    return convertHebrew(value);
+  }
+
   return [...katakanaToHiragana(value)]
     .map((character) => {
       if (smallKana.has(character) || character === "ー") {
@@ -122,6 +142,44 @@ function convertKana(value, target) {
       }
 
       return kanaMap[character]?.[target] ?? character;
+    })
+    .join("");
+}
+
+function getKanaVowel(character) {
+  if ("あかさたなはまやらわがざだばぱ".includes(character)) return "a";
+  if ("きしちにひみりぎじぢびぴ".includes(character)) return "i";
+  if ("くすつぬふむゆるぐずづぶぷゔ".includes(character)) return "u";
+  if ("えけせてねへめれげぜでべぺ".includes(character)) return "e";
+  if ("おこそとのほもよろをごぞどぼぽ".includes(character)) return "o";
+  if ("ん".includes(character)) return "n";
+  return "";
+}
+
+function getHebrewMark(character, nextCharacter) {
+  if (!showHebrewVowels) {
+    return "";
+  }
+
+  if (reducedVowels[nextCharacter]) {
+    return reducedVowels[nextCharacter];
+  }
+
+  return vowelMarks[getKanaVowel(character)] ?? "";
+}
+
+function convertHebrew(value) {
+  const characters = [...katakanaToHiragana(value)];
+
+  return characters
+    .map((character, index) => {
+      if (smallKana.has(character) || character === "ー") {
+        return "";
+      }
+
+      const letter = kanaMap[character]?.hebrew ?? character;
+      const mark = kanaMap[character] ? getHebrewMark(character, characters[index + 1]) : "";
+      return letter + mark;
     })
     .join("");
 }
@@ -154,7 +212,13 @@ clearButton.addEventListener("click", () => {
   scheduleConversion();
 });
 
-sourceText.value = "あいうえお かきくけこ みょ ん";
+hebrewVowelsButton.addEventListener("click", () => {
+  showHebrewVowels = !showHebrewVowels;
+  hebrewVowelsButton.setAttribute("aria-pressed", String(showHebrewVowels));
+  hebrewVowelsButton.textContent = showHebrewVowels ? "Hide Hebrew vowels" : "Show Hebrew vowels";
+  convertText();
+});
+
 statusText.textContent = "Kana only. Small kana are omitted.";
 convertText();
 

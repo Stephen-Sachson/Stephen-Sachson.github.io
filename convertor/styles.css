@@ -204,6 +204,7 @@ textarea::placeholder {
 .controls {
   margin-top: 16px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .toggle {
@@ -223,6 +224,12 @@ textarea::placeholder {
 .text-button {
   padding: 0 18px;
   font-weight: 800;
+}
+
+.toggle-button[aria-pressed="true"] {
+  border-color: var(--cedar);
+  color: var(--cedar);
+  background: rgba(155, 47, 39, 0.08);
 }
 
 .status {
@@ -291,6 +298,7 @@ textarea::placeholder {
 
   .controls {
     margin-top: 12px;
+    flex-direction: column;
   }
 
   .text-button {

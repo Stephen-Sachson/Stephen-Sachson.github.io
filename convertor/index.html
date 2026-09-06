@@ -23,7 +23,6 @@
               id="sourceText"
               spellcheck="false"
               autocomplete="off"
-              placeholder="あいうえお かきくけこ みょ ん"
             ></textarea>
           </label>
 
@@ -37,7 +36,7 @@
                 </svg>
               </button>
             </div>
-            <output id="arabicText" class="result-text script-output" dir="rtl">ايواا ككككك م ن</output>
+            <output id="arabicText" class="result-text script-output" dir="rtl"></output>
 
             <div class="result-header">
               <span class="panel-label">Hebrew</span>
@@ -48,11 +47,19 @@
                 </svg>
               </button>
             </div>
-            <output id="hebrewText" class="result-text script-output" dir="rtl">איווא כככככ מ נ</output>
+            <output id="hebrewText" class="result-text script-output" dir="rtl"></output>
           </section>
         </div>
 
         <div class="controls" aria-label="Converter options">
+          <button
+            id="hebrewVowelsButton"
+            class="text-button toggle-button"
+            type="button"
+            aria-pressed="false"
+          >
+            Show Hebrew vowels
+          </button>
           <button id="clearButton" class="text-button" type="button">Clear</button>
         </div>
 
