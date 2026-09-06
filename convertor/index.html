@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kana to Arabic and Hebrew Converter</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="glyphCanvas" aria-hidden="true"></canvas>
+
+    <main class="app-shell">
+      <section class="converter" aria-label="Kana letter converter">
+        <div class="title-block">
+          <p class="eyebrow">Kana letter converter</p>
+          <h1>Convert kana into Arabic and Hebrew letters</h1>
+        </div>
+
+        <div class="workspace">
+          <label class="panel input-panel" for="sourceText">
+            <span class="panel-label">Kana text</span>
+            <textarea
+              id="sourceText"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="あいうえお かきくけこ みょ ん"
+            ></textarea>
+          </label>
+
+          <section class="panel results-panel" aria-label="Conversion results">
+            <div class="result-header">
+              <span class="panel-label">Arabic</span>
+              <button class="icon-button" data-copy="arabicText" type="button" aria-label="Copy Arabic" title="Copy Arabic">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+            <output id="arabicText" class="result-text script-output" dir="rtl">ايواا ككككك م ن</output>
+
+            <div class="result-header">
+              <span class="panel-label">Hebrew</span>
+              <button class="icon-button" data-copy="hebrewText" type="button" aria-label="Copy Hebrew" title="Copy Hebrew">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+            <output id="hebrewText" class="result-text script-output" dir="rtl">איווא כככככ מ נ</output>
+          </section>
+        </div>
+
+        <div class="controls" aria-label="Converter options">
+          <button id="clearButton" class="text-button" type="button">Clear</button>
+        </div>
+
+        <p id="statusText" class="status" role="status">Kana only. Small kana are omitted.</p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
