@@ -45,6 +45,7 @@ const punctuationMap = {
   "（": { arabic: "(", hebrew: "(" },
   "）": { arabic: ")", hebrew: ")" },
   "・": { arabic: "·", hebrew: "·" },
+  "　": { arabic: " ", hebrew: " " },
   "…": { arabic: "…", hebrew: "…" }
 };
 
