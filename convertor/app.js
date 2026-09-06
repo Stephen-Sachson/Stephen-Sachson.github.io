@@ -13,6 +13,7 @@ const katakanaStart = 0x30a1;
 const katakanaEnd = 0x30f6;
 const hiraganaOffset = 0x60;
 const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "ゕ", "ゖ"]);
+const digits = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 const reducedVowels = {
   ゃ: "\u05b2",
   ゅ: "\u05b1",
@@ -27,7 +28,14 @@ const vowelMarks = {
   n: "\u05b0"
 };
 
-const hebrewFinalForms = { "כ": "ך", "מ": "ם", "נ": "ן", "פ": "ף", "צ": "ץ" };
+const hebrewFinalForms = { 
+  "כ": "ך",
+  "מ": "ם", 
+  "נ": "ן", 
+  "פ": "ף", 
+  "פּ": "ףּ", 
+  "צ": "ץ" 
+};
 
 const punctuationMap = {
   "、": { arabic: "، ", hebrew: ", " },
@@ -131,13 +139,13 @@ const kanaMap = {
   べ: { arabic: "ب", hebrew: "ב" },
   ぼ: { arabic: "ب", hebrew: "ב" },
 
-  ぱ: { arabic: "پ", hebrew: "פ" },
-  ぴ: { arabic: "پ", hebrew: "פ" },
-  ぷ: { arabic: "پ", hebrew: "פ" },
-  ぺ: { arabic: "پ", hebrew: "פ" },
-  ぽ: { arabic: "پ", hebrew: "פ" },
+  ぱ: { arabic: "پ", hebrew: "פּ" },
+  ぴ: { arabic: "پ", hebrew: "פּ" },
+  ぷ: { arabic: "پ", hebrew: "פּ" },
+  ぺ: { arabic: "پ", hebrew: "פּ" },
+  ぽ: { arabic: "پ", hebrew: "פּ" },
 
-  ゔ: { arabic: "ف", hebrew: "ו" }
+  ゔ: { arabic: "ف", hebrew: "בּ" }
 };
 
 function katakanaToHiragana(value) {
@@ -198,6 +206,17 @@ function convertKana(value, target) {
         return "";
       }
 
+      if (digits.has(character)) {
+        const previousCharacter = characters[index - 1];
+        if (
+          previousCharacter &&
+          (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
+          ) {
+          return character
+        }
+        return " " + character
+      }
+
       if (character === "ー") {
         const previousCharacter = characters[index - 1];
         return getLongVowelLetter(previousCharacter, target);
@@ -211,11 +230,25 @@ function convertKana(value, target) {
 function getKanaVowel(character) {
   if ("あかさたなはまやらわがざだばぱ".includes(character)) return "a";
   if ("きにひみりぎびぴ".includes(character)) return "i";
-  if ("くすぬふむゆるぐずづぶぷゔ".includes(character)) return "u";
+  if ("くすぬむゆるぐずづぶぷ".includes(character)) return "u";
   if ("えけせてねへめれげぜでべぺ".includes(character)) return "e";
   if ("おこそとのほもよろをごぞどぼぽ".includes(character)) return "o";
   if ("んっ".includes(character)) return "n";
   return "";
+}
+
+function getKanaVowelWithSmallKana(character, nextCharacter) {
+  if (
+    (character === "ふ" || character === "ゔ") &&
+    ["ぁ", "ぃ", "ぇ", "ぉ"].includes(nextCharacter)
+  ) {
+    if (nextCharacter === "ぁ") return "a";
+    if (nextCharacter === "ぃ") return "i";
+    if (nextCharacter === "ぇ") return "e";
+    if (nextCharacter === "ぉ") return "o";
+  }
+
+  return getKanaVowel(character);
 }
 
 function getHebrewMark(character, nextCharacter) {
@@ -227,7 +260,7 @@ function getHebrewMark(character, nextCharacter) {
     return reducedVowels[nextCharacter];
   }
 
-  return vowelMarks[getKanaVowel(character)] ?? "";
+  return vowelMarks[getKanaVowelWithSmallKana(character, nextCharacter)] ?? "";
 }
 
 function convertHebrew(value) {
@@ -244,6 +277,17 @@ function convertHebrew(value) {
         return "";
       }
 
+      if (digits.has(character)) {
+        const previousCharacter = characters[index - 1];
+        if (
+          previousCharacter &&
+          (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
+          ) {
+          return character
+        }
+        return " " + character
+      }
+
       if (character === "ー") {
         const previousCharacter = characters[index - 1];
         return getLongVowelLetter(previousCharacter, "hebrew");
@@ -251,12 +295,19 @@ function convertHebrew(value) {
 
       let letter = kanaMap[character]?.hebrew ?? character;
       const nextCharacter = characters[index + 1];
+      const skipNextCharacter = characters[index + 2];
 
       // Use Hebrew final forms when this is the end of a word.
       if (
         hebrewFinalForms[letter] &&
-        (nextCharacter === undefined || /\s/.test(nextCharacter))
+        (nextCharacter === undefined || /\s/.test(nextCharacter) || punctuationMap[nextCharacter])
       ) {
+        letter = hebrewFinalForms[letter];
+      }
+      else if (
+        smallKana.has(nextCharacter) &&
+        (skipNextCharacter === undefined || /\s/.test(skipNextCharacter) || punctuationMap[skipNextCharacter])
+        ) {
         letter = hebrewFinalForms[letter];
       }
 
