@@ -29,6 +29,25 @@ const vowelMarks = {
 
 const hebrewFinalForms = { "כ": "ך", "מ": "ם", "נ": "ן", "פ": "ף", "צ": "ץ" };
 
+const punctuationMap = {
+  "、": { arabic: "، ", hebrew: ", " },
+  "。": { arabic: ". ", hebrew: ". " },
+  "，": { arabic: "،", hebrew: ", " },
+  "．": { arabic: ".", hebrew: ". " },
+  "？": { arabic: "؟ ", hebrew: "? " },
+  "！": { arabic: "! ", hebrew: "! " },
+  "：": { arabic: ": ", hebrew: ": " },
+  "；": { arabic: "؛ ", hebrew: "; " },
+  "「": { arabic: "«", hebrew: "“" },
+  "」": { arabic: "»", hebrew: "”" },
+  "『": { arabic: "«", hebrew: "„" },
+  "』": { arabic: "»", hebrew: "”" },
+  "（": { arabic: "(", hebrew: "(" },
+  "）": { arabic: ")", hebrew: ")" },
+  "・": { arabic: "·", hebrew: "·" },
+  "…": { arabic: "…", hebrew: "…" }
+};
+
 const kanaMap = {
   あ: { arabic: "ا", hebrew: "א" },
   い: { arabic: "ي", hebrew: "י" },
@@ -169,6 +188,11 @@ function convertKana(value, target) {
 
   return characters
     .map((character, index) => {
+      const punctuation = punctuationMap[character];
+      if (punctuation) {
+        return punctuation[target];
+      }
+
       if (smallKana.has(character)) {
         return "";
       }
@@ -210,6 +234,11 @@ function convertHebrew(value) {
 
   return characters
     .map((character, index) => {
+      const punctuation = punctuationMap[character];
+      if (punctuation) {
+        return punctuation["hebrew"];
+      }
+
       if (smallKana.has(character)) {
         return "";
       }
