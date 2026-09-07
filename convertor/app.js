@@ -37,6 +37,8 @@ const hebrewFinalForms = {
   "צ": "ץ" 
 };
 
+const arabicMaddah = "\u0653";
+
 const punctuationMap = {
   "、": { arabic: "، ", hebrew: ", " },
   "。": { arabic: ". ", hebrew: ". " },
@@ -188,6 +190,18 @@ function getLongVowelLetter(character, target) {
   return "";
 }
 
+function getArabicMark(character, nextCharacter) {
+  if (!showHebrewVowels) {
+    return "";
+  }
+
+  if (["ゃ", "ゅ", "ょ"].includes(nextCharacter)) {
+    return arabicMaddah;
+  }
+
+  return "";
+}
+
 function convertKana(value, target) {
   if (target === "hebrew") {
     return convertHebrew(value);
@@ -239,7 +253,15 @@ function convertKana(value, target) {
         return getLongVowelLetter(previousCharacter, target);
       }
 
-      return kanaMap[character]?.[target] ?? character;
+      const letter = kanaMap[character]?.[target] ?? character;
+      const nextCharacter = characters[index + 1];
+
+      if (target === "arabic" && kanaMap[character]) {
+        const mark = getArabicMark(character, nextCharacter);
+        return letter + mark;
+      }
+
+      return letter;
     })
     .join("");
 }
