@@ -207,14 +207,31 @@ function convertKana(value, target) {
       }
 
       if (digits.has(character)) {
+        let retChar = character
         const previousCharacter = characters[index - 1];
         if (
           previousCharacter &&
           (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
           ) {
-          return character
+          
         }
-        return " " + character
+        else {
+          retChar = " " + retChar
+        }
+
+        const nextChar = characters[index + 1];
+
+        if (
+          nextChar &&
+          (nextChar === undefined || /\s/.test(nextChar) || punctuationMap[nextChar] || digits.has(nextChar))
+          ) {
+          
+        }
+        else {
+          retChar = retChar + " "
+        }
+
+        return retChar
       }
 
       if (character === "ー") {
@@ -278,14 +295,31 @@ function convertHebrew(value) {
       }
 
       if (digits.has(character)) {
+        let retChar = character
         const previousCharacter = characters[index - 1];
         if (
           previousCharacter &&
           (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
           ) {
-          return character
+          
         }
-        return " " + character
+        else {
+          retChar = " " + retChar
+        }
+
+        const nextChar = characters[index + 1];
+
+        if (
+          nextChar &&
+          (nextChar === undefined || /\s/.test(nextChar) || punctuationMap[nextChar] || digits.has(nextChar))
+          ) {
+          
+        }
+        else {
+          retChar = retChar + " "
+        }
+
+        return retChar
       }
 
       if (character === "ー") {
