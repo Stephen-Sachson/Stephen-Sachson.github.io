@@ -76,11 +76,11 @@ const kanaMap = {
   せ: { arabic: "س", hebrew: "ס" },
   そ: { arabic: "س", hebrew: "ס" },
 
-  た: { arabic: "ت", hebrew: "ט" },
-  ち: { arabic: "چ", hebrew: "ח" },
+  た: { arabic: "ت", hebrew: "ת" },
+  ち: { arabic: "چ", hebrew: "ט" },
   つ: { arabic: "ث", hebrew: "צ" },
-  て: { arabic: "ت", hebrew: "ט" },
-  と: { arabic: "ت", hebrew: "ט" },
+  て: { arabic: "ت", hebrew: "ת" },
+  と: { arabic: "ت", hebrew: "ת" },
 
   な: { arabic: "ن", hebrew: "נ" },
   に: { arabic: "ن", hebrew: "נ" },
@@ -122,7 +122,7 @@ const kanaMap = {
   ご: { arabic: "غ", hebrew: "ג" },
 
   ざ: { arabic: "ز", hebrew: "ז" },
-  じ: { arabic: "ج", hebrew: "ת" },
+  じ: { arabic: "ج", hebrew: "שׂ" },
   ず: { arabic: "ز", hebrew: "ז" },
   ぜ: { arabic: "ز", hebrew: "ז" },
   ぞ: { arabic: "ز", hebrew: "ז" },
@@ -305,6 +305,7 @@ function convertHebrew(value) {
         letter = hebrewFinalForms[letter];
       }
       else if (
+        hebrewFinalForms[letter] &&
         smallKana.has(nextCharacter) &&
         (skipNextCharacter === undefined || /\s/.test(skipNextCharacter) || punctuationMap[skipNextCharacter])
         ) {
