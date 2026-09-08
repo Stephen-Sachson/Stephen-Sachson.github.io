@@ -163,7 +163,7 @@ function katakanaToHiragana(value) {
 }
 
 function getLongVowelKana(character) {
-  const vowel = getKanaVowel(character);
+  const vowel = getKanaVowelIncludingOmittedVowels(character);
 
   if (vowel === "a") return "a";
   if (vowel === "i" || vowel === "e") return "i";
@@ -269,11 +269,21 @@ function convertKana(value, target) {
 function getKanaVowel(character) {
   if ("あかさたなはまやらわがざだばぱ".includes(character)) return "a";
   if ("きにひみりぎびぴ".includes(character)) return "i";
-  if ("くすぬむゆるぐずづぶぷ".includes(character)) return "u";
+  if ("くぬむゆるぐぶぷ".includes(character)) return "u";
   if ("えけせてねへめれげぜでべぺ".includes(character)) return "e";
   if ("おこそとのほもよろをごぞどぼぽ".includes(character)) return "o";
   if ("んっ".includes(character)) return "n";
   return "";
+}
+//const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "ゕ", "ゖ"]);
+function getKanaVowelIncludingOmittedVowels(character) {
+  if ("ぁゃ".includes(character)) return "a";
+  if ("いぃしちぢ".includes(character)) return "i";
+  if ("うぅふつゅすずづ".includes(character)) return "u";
+  if ("ぇ".includes(character)) return "e";
+  if ("ぉょ".includes(character)) return "o";
+
+  return getKanaVowel(character);
 }
 
 function getKanaVowelWithSmallKana(character, nextCharacter) {
@@ -408,7 +418,7 @@ clearButton.addEventListener("click", () => {
 hebrewVowelsButton.addEventListener("click", () => {
   showHebrewVowels = !showHebrewVowels;
   hebrewVowelsButton.setAttribute("aria-pressed", String(showHebrewVowels));
-  hebrewVowelsButton.textContent = showHebrewVowels ? "Hide Hebrew vowels" : "Show Hebrew vowels";
+  hebrewVowelsButton.textContent = showHebrewVowels ? "Hide vowels" : "Show vowels";
   convertText();
 });
 
