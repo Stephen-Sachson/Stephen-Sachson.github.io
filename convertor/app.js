@@ -7,37 +7,88 @@ const statusText = document.querySelector("#statusText");
 const copyButtons = document.querySelectorAll("[data-copy]");
 
 let conversionTimer = null;
+
+// Vowel display state
 let showHebrewVowels = false;
+let showArabicVowels = false;
 
 const katakanaStart = 0x30a1;
 const katakanaEnd = 0x30f6;
 const hiraganaOffset = 0x60;
-const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "ゕ", "ゖ"]);
-const digits = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
-const reducedVowels = {
-  ゃ: "\u05b2",
-  ゅ: "\u05b1",
-  ょ: "\u05b3"
-};
-const vowelMarks = {
-  a: "\u05b7",
-  i: "\u05b4",
-  u: "\u05b6",
-  e: "\u05b5",
-  o: "\u05b8",
-  n: "\u05b0"
+
+const smallKana = new Set([
+  "ぁ", "ぃ", "ぅ", "ぇ", "ぉ",
+  "ゃ", "ゅ", "ょ",
+  "ゎ", "ゕ", "ゖ"
+]);
+
+const digits = new Set([
+  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+]);
+
+
+// ============================================================
+// HEBREW VOWELS
+// ============================================================
+
+const hebrewReducedVowels = {
+  ゃ: "\u05b2", // Hataf patah
+  ゅ: "\u05b1", // Hataf segol
+  ょ: "\u05b3"  // Hataf qamats
 };
 
-const hebrewFinalForms = { 
-  "כ": "ך",
-  "מ": "ם", 
-  "נ": "ן", 
-  "פ": "ף", 
-  "פּ": "ףּ", 
-  "צ": "ץ" 
+const hebrewVowelMarks = {
+  a: "\u05b7", // Patah
+  i: "\u05b4", // Hiriq
+  u: "\u05b6", // Segol? (existing mapping preserved)
+  e: "\u05b5", // Tsere
+  o: "\u05b8", // Qamats
+  n: "\u05b0"  // Sheva
 };
 
+
+// ============================================================
+// ARABIC VOWELS
+// ============================================================
+
+// Arabic harakat:
+// a = Fatha
+// i = Kasrah
+// u = Dammah
+// e = Kasratan
+// o = Dammatan
+// n = Sukun
+
+const arabicVowelMarks = {
+  a: "\u064E", // َ Fatha
+  i: "\u0650", // ِ Kasrah
+  u: "\u064F", // ُ Dammah
+  e: "\u064D", // ٍ Kasratan
+  o: "\u064C", // ٌ Dammatan
+  n: "\u0652"  // ْ Sukun
+};
+
+// Arabic Maddah Above
 const arabicMaddah = "\u0653";
+
+
+// ============================================================
+// HEBREW FINAL FORMS
+// ============================================================
+
+const hebrewFinalForms = {
+  "כ": "ך",
+  "מ": "ם",
+  "נ": "ן",
+  "פ": "ף",
+  "פּ": "ףּ",
+  "צ": "ץ"
+};
+
+
+// ============================================================
+// PUNCTUATION
+// ============================================================
 
 const punctuationMap = {
   "、": { arabic: "، ", hebrew: ", " },
@@ -58,6 +109,11 @@ const punctuationMap = {
   "　": { arabic: " ", hebrew: " " },
   "…": { arabic: "…", hebrew: "…" }
 };
+
+
+// ============================================================
+// KANA → ARABIC / HEBREW
+// ============================================================
 
 const kanaMap = {
   あ: { arabic: "ا", hebrew: "א" },
@@ -150,17 +206,29 @@ const kanaMap = {
   ゔ: { arabic: "ف", hebrew: "בּ" }
 };
 
+
+// ============================================================
+// KATAKANA → HIRAGANA
+// ============================================================
+
 function katakanaToHiragana(value) {
   return [...value]
     .map((character) => {
       const code = character.charCodeAt(0);
+
       if (code >= katakanaStart && code <= katakanaEnd) {
         return String.fromCharCode(code - hiraganaOffset);
       }
+
       return character;
     })
     .join("");
 }
+
+
+// ============================================================
+// LONG VOWELS
+// ============================================================
 
 function getLongVowelKana(character) {
   const vowel = getKanaVowelIncludingOmittedVowels(character);
@@ -190,17 +258,40 @@ function getLongVowelLetter(character, target) {
   return "";
 }
 
+
+// ============================================================
+// ARABIC VOWEL / MADDAH
+// ============================================================
+
 function getArabicMark(character, nextCharacter) {
-  if (!showHebrewVowels) {
+  if (!showArabicVowels) {
     return "";
   }
 
-  if (["ゃ", "ゅ", "ょ"].includes(nextCharacter)) {
-    return arabicMaddah;
+  // Small ya/yu/yo:
+  // Add Maddah + the vowel belonging to the small kana.
+  if (nextCharacter === "ゃ") {
+    return arabicMaddah + arabicVowelMarks.a;
   }
 
-  return "";
+  if (nextCharacter === "ゅ") {
+    return arabicMaddah + arabicVowelMarks.u;
+  }
+
+  if (nextCharacter === "ょ") {
+    return arabicMaddah + arabicVowelMarks.o;
+  }
+
+  // Normal kana receive their corresponding Arabic vowel.
+  const vowel = getKanaVowelWithSmallKana(character, nextCharacter);
+
+  return arabicVowelMarks[vowel] ?? "";
 }
+
+
+// ============================================================
+// GENERAL KANA CONVERSION
+// ============================================================
 
 function convertKana(value, target) {
   if (target === "hebrew") {
@@ -212,42 +303,56 @@ function convertKana(value, target) {
   return characters
     .map((character, index) => {
       const punctuation = punctuationMap[character];
+
       if (punctuation) {
         return punctuation[target];
       }
 
+      // Small kana are represented by the preceding kana.
       if (smallKana.has(character)) {
         return "";
       }
 
+      // Digits
       if (digits.has(character)) {
-        let retChar = character
+        let retChar = character;
+
         const previousCharacter = characters[index - 1];
+
         if (
           previousCharacter &&
-          (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
-          ) {
-          
-        }
-        else {
-          retChar = " " + retChar
+          (
+            previousCharacter === undefined ||
+            /\s/.test(previousCharacter) ||
+            punctuationMap[previousCharacter] ||
+            digits.has(previousCharacter)
+          )
+        ) {
+          // No leading space
+        } else {
+          retChar = " " + retChar;
         }
 
         const nextChar = characters[index + 1];
 
         if (
           nextChar &&
-          (nextChar === undefined || /\s/.test(nextChar) || punctuationMap[nextChar] || digits.has(nextChar))
-          ) {
-          
-        }
-        else {
-          retChar = retChar + " "
+          (
+            nextChar === undefined ||
+            /\s/.test(nextChar) ||
+            punctuationMap[nextChar] ||
+            digits.has(nextChar)
+          )
+        ) {
+          // No trailing space
+        } else {
+          retChar = retChar + " ";
         }
 
-        return retChar
+        return retChar;
       }
 
+      // Long vowel mark
       if (character === "ー") {
         const previousCharacter = characters[index - 1];
         return getLongVowelLetter(previousCharacter, target);
@@ -266,25 +371,58 @@ function convertKana(value, target) {
     .join("");
 }
 
+
+// ============================================================
+// KANA VOWEL DETECTION
+// ============================================================
+
 function getKanaVowel(character) {
-  if ("あかさたなはまやらわがざだばぱ".includes(character)) return "a";
-  if ("きにひみりぎびぴ".includes(character)) return "i";
-  if ("くぬむゆるぐぶぷ".includes(character)) return "u";
-  if ("えけせてねへめれげぜでべぺ".includes(character)) return "e";
-  if ("おこそとのほもよろをごぞどぼぽ".includes(character)) return "o";
-  if ("んっ".includes(character)) return "n";
+  if ("あかさたなはまやらわがざだばぱ".includes(character)) {
+    return "a";
+  }
+
+  if ("きにひみりぎびぴ".includes(character)) {
+    return "i";
+  }
+
+  if ("くぬむゆるぐぶぷ".includes(character)) {
+    return "u";
+  }
+
+  if ("えけせてねへめれげぜでべぺ".includes(character)) {
+    return "e";
+  }
+
+  if ("おこそとのほもよろをごぞどぼぽ".includes(character)) {
+    return "o";
+  }
+
+  if ("んっ".includes(character)) {
+    return "n";
+  }
+
   return "";
 }
-//const smallKana = new Set(["ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "ゎ", "ゕ", "ゖ"]);
+
+
+// ============================================================
+// KANA VOWEL INCLUDING OMITTED VOWELS
+// ============================================================
+
 function getKanaVowelIncludingOmittedVowels(character) {
   if ("ぁゃ".includes(character)) return "a";
-  if ("いぃしちぢ".includes(character)) return "i";
+  if ("いぃしじちぢ".includes(character)) return "i";
   if ("うぅふつゅすずづ".includes(character)) return "u";
   if ("ぇ".includes(character)) return "e";
   if ("ぉょ".includes(character)) return "o";
 
   return getKanaVowel(character);
 }
+
+
+// ============================================================
+// KANA + SMALL KANA VOWELS
+// ============================================================
 
 function getKanaVowelWithSmallKana(character, nextCharacter) {
   if (
@@ -300,17 +438,31 @@ function getKanaVowelWithSmallKana(character, nextCharacter) {
   return getKanaVowel(character);
 }
 
+
+// ============================================================
+// HEBREW VOWELS
+// ============================================================
+
 function getHebrewMark(character, nextCharacter) {
   if (!showHebrewVowels) {
     return "";
   }
 
-  if (reducedVowels[nextCharacter]) {
-    return reducedVowels[nextCharacter];
+  if (hebrewReducedVowels[nextCharacter]) {
+    return hebrewReducedVowels[nextCharacter];
   }
 
-  return vowelMarks[getKanaVowelWithSmallKana(character, nextCharacter)] ?? "";
+  return (
+    hebrewVowelMarks[
+      getKanaVowelWithSmallKana(character, nextCharacter)
+    ] ?? ""
+  );
 }
+
+
+// ============================================================
+// HEBREW CONVERSION
+// ============================================================
 
 function convertHebrew(value) {
   const characters = [...katakanaToHiragana(value)];
@@ -318,63 +470,89 @@ function convertHebrew(value) {
   return characters
     .map((character, index) => {
       const punctuation = punctuationMap[character];
+
       if (punctuation) {
         return punctuation["hebrew"];
       }
 
+      // Small kana are represented by the preceding kana.
       if (smallKana.has(character)) {
         return "";
       }
 
+      // Digits
       if (digits.has(character)) {
-        let retChar = character
+        let retChar = character;
+
         const previousCharacter = characters[index - 1];
+
         if (
           previousCharacter &&
-          (previousCharacter === undefined || /\s/.test(previousCharacter) || punctuationMap[previousCharacter] || digits.has(previousCharacter))
-          ) {
-          
-        }
-        else {
-          retChar = " " + retChar
+          (
+            previousCharacter === undefined ||
+            /\s/.test(previousCharacter) ||
+            punctuationMap[previousCharacter] ||
+            digits.has(previousCharacter)
+          )
+        ) {
+          // No leading space
+        } else {
+          retChar = " " + retChar;
         }
 
         const nextChar = characters[index + 1];
 
         if (
           nextChar &&
-          (nextChar === undefined || /\s/.test(nextChar) || punctuationMap[nextChar] || digits.has(nextChar))
-          ) {
-          
-        }
-        else {
-          retChar = retChar + " "
+          (
+            nextChar === undefined ||
+            /\s/.test(nextChar) ||
+            punctuationMap[nextChar] ||
+            digits.has(nextChar)
+          )
+        ) {
+          // No trailing space
+        } else {
+          retChar = retChar + " ";
         }
 
-        return retChar
+        return retChar;
       }
 
+      // Long vowel mark
       if (character === "ー") {
         const previousCharacter = characters[index - 1];
         return getLongVowelLetter(previousCharacter, "hebrew");
       }
 
       let letter = kanaMap[character]?.hebrew ?? character;
+
       const nextCharacter = characters[index + 1];
       const skipNextCharacter = characters[index + 2];
 
       // Use Hebrew final forms when this is the end of a word.
       if (
         hebrewFinalForms[letter] &&
-        (nextCharacter === undefined || /\s/.test(nextCharacter) || punctuationMap[nextCharacter])
+        (
+          nextCharacter === undefined ||
+          /\s/.test(nextCharacter) ||
+          punctuationMap[nextCharacter]
+        )
       ) {
         letter = hebrewFinalForms[letter];
       }
+
+      // Use Hebrew final forms when a small kana follows
+      // and that small kana ends the word.
       else if (
         hebrewFinalForms[letter] &&
         smallKana.has(nextCharacter) &&
-        (skipNextCharacter === undefined || /\s/.test(skipNextCharacter) || punctuationMap[skipNextCharacter])
-        ) {
+        (
+          skipNextCharacter === undefined ||
+          /\s/.test(skipNextCharacter) ||
+          punctuationMap[skipNextCharacter]
+        )
+      ) {
         letter = hebrewFinalForms[letter];
       }
 
@@ -387,8 +565,14 @@ function convertHebrew(value) {
     .join("");
 }
 
+
+// ============================================================
+// CONVERSION SCHEDULING
+// ============================================================
+
 function scheduleConversion() {
   window.clearTimeout(conversionTimer);
+
   conversionTimer = window.setTimeout(convertText, 80);
 }
 
@@ -399,74 +583,200 @@ function convertText() {
   hebrewText.textContent = convertKana(text, "hebrew");
 }
 
+
+// ============================================================
+// COPY BUTTONS
+// ============================================================
+
 copyButtons.forEach((button) => {
   button.addEventListener("click", async () => {
     const target = document.querySelector(`#${button.dataset.copy}`);
+
     await navigator.clipboard.writeText(target.textContent);
+
     button.classList.add("copied");
-    window.setTimeout(() => button.classList.remove("copied"), 900);
+
+    window.setTimeout(
+      () => button.classList.remove("copied"),
+      900
+    );
   });
 });
 
+
+// ============================================================
+// INPUT / CLEAR
+// ============================================================
+
 sourceText.addEventListener("input", scheduleConversion);
+
 clearButton.addEventListener("click", () => {
   sourceText.value = "";
   sourceText.focus();
   scheduleConversion();
 });
 
+
+// ============================================================
+// VOWEL TOGGLE
+// ============================================================
+
+// The existing vowel button now controls both Hebrew and Arabic
+// vowel marks at the same time.
+
 hebrewVowelsButton.addEventListener("click", () => {
   showHebrewVowels = !showHebrewVowels;
-  hebrewVowelsButton.setAttribute("aria-pressed", String(showHebrewVowels));
-  hebrewVowelsButton.textContent = showHebrewVowels ? "Hide vowels" : "Show vowels";
+  showArabicVowels = showHebrewVowels;
+
+  hebrewVowelsButton.setAttribute(
+    "aria-pressed",
+    String(showHebrewVowels)
+  );
+
+  hebrewVowelsButton.textContent =
+    showHebrewVowels
+      ? "Hide vowels"
+      : "Show vowels";
+
   convertText();
 });
 
-statusText.textContent = "Kana only. Small kana are omitted.";
+
+// ============================================================
+// INITIAL STATE
+// ============================================================
+
+statusText.textContent =
+  "Kana only. Small kana are omitted.";
+
 convertText();
+
+
+// ============================================================
+// BACKGROUND GLYPH CANVAS
+// ============================================================
 
 const canvas = document.querySelector("#glyphCanvas");
 const context = canvas.getContext("2d");
-const glyphs = ["あ", "い", "う", "え", "お", "か", "さ", "た", "な", "ま", "みょ", "ん", "ا", "א"];
+
+const glyphs = [
+  "あ", "い", "う", "え", "お",
+  "か", "さ", "た", "な", "ま",
+  "みょ", "ん", "ا", "א"
+];
+
 let particles = [];
 
 function resizeCanvas() {
   const pixelRatio = window.devicePixelRatio || 1;
-  canvas.width = Math.floor(window.innerWidth * pixelRatio);
-  canvas.height = Math.floor(window.innerHeight * pixelRatio);
-  context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-  particles = Array.from({ length: Math.max(18, Math.floor(window.innerWidth / 54)) }, () => ({
-    glyph: glyphs[Math.floor(Math.random() * glyphs.length)],
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    size: 20 + Math.random() * 34,
-    speed: 0.12 + Math.random() * 0.32,
-    alpha: 0.08 + Math.random() * 0.14
-  }));
+
+  canvas.width =
+    Math.floor(window.innerWidth * pixelRatio);
+
+  canvas.height =
+    Math.floor(window.innerHeight * pixelRatio);
+
+  context.setTransform(
+    pixelRatio,
+    0,
+    0,
+    pixelRatio,
+    0,
+    0
+  );
+
+  particles = Array.from(
+    {
+      length: Math.max(
+        18,
+        Math.floor(window.innerWidth / 54)
+      )
+    },
+    () => ({
+      glyph:
+        glyphs[
+          Math.floor(
+            Math.random() * glyphs.length
+          )
+        ],
+
+      x:
+        Math.random() *
+        window.innerWidth,
+
+      y:
+        Math.random() *
+        window.innerHeight,
+
+      size:
+        20 +
+        Math.random() * 34,
+
+      speed:
+        0.12 +
+        Math.random() * 0.32,
+
+      alpha:
+        0.08 +
+        Math.random() * 0.14
+    })
+  );
 }
 
 function drawCanvas() {
-  context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  context.clearRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
   context.textAlign = "center";
 
   particles.forEach((particle) => {
     context.globalAlpha = particle.alpha;
-    context.font = `700 ${particle.size}px serif`;
-    context.fillStyle = particle.glyph === "ا" || particle.glyph === "א" ? "#9b2f27" : "#2f694f";
-    context.fillText(particle.glyph, particle.x, particle.y);
+
+    context.font =
+      `700 ${particle.size}px serif`;
+
+    context.fillStyle =
+      particle.glyph === "ا" ||
+      particle.glyph === "א"
+        ? "#9b2f27"
+        : "#2f694f";
+
+    context.fillText(
+      particle.glyph,
+      particle.x,
+      particle.y
+    );
+
     particle.y -= particle.speed;
-    particle.x += Math.sin((particle.y + particle.size) * 0.01) * 0.12;
+
+    particle.x +=
+      Math.sin(
+        (particle.y + particle.size) * 0.01
+      ) * 0.12;
 
     if (particle.y < -40) {
-      particle.y = window.innerHeight + 40;
-      particle.x = Math.random() * window.innerWidth;
+      particle.y =
+        window.innerHeight + 40;
+
+      particle.x =
+        Math.random() *
+        window.innerWidth;
     }
   });
 
   context.globalAlpha = 1;
+
   window.requestAnimationFrame(drawCanvas);
 }
 
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
 resizeCanvas();
 drawCanvas();
