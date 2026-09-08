@@ -440,8 +440,7 @@ function getKanaVowelIncludingOmittedVowels(character) {
 // ============================================================
 
 function getKanaVowelWithSmallKana(character, nextCharacter) {
-  if (
-    (character === "ふ" || character === "ゔ") &&
+  if ("ふゔういじしち".includes(character) &&
     ["ぁ", "ぃ", "ぇ", "ぉ"].includes(nextCharacter)
   ) {
     if (nextCharacter === "ぁ") return "a";
