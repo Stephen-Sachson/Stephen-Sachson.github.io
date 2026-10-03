@@ -1,6 +1,6 @@
 {
-	"EnableUploadPhoto":1,
-	"EnableUploadStartEnd":1,
+	"EnableUploadPhoto":0,
+	"EnableUploadStartEnd":0,
 	"OneDollarAmount":10,
 	"SpecialOfferText":{
 		"en":"50% OFF! Ends soon",
