@@ -283,15 +283,30 @@ function getArabicMark(character, nextCharacter) {
   // Small ya/yu/yo:
   // Add Maddah + the vowel belonging to the small kana.
   if (nextCharacter === "ゃ") {
-    return arabicMaddah + arabicVowelMarks.a;
+    if ("じしち".includes(character)) {
+      return arabicVowelMarks.a;
+    }
+    else {
+      return arabicMaddah + arabicVowelMarks.a;
+    }
   }
 
   if (nextCharacter === "ゅ") {
-    return arabicMaddah + arabicVowelMarks.u;
+    if ("じしち".includes(character)) {
+      return arabicVowelMarks.u;
+    }
+    else {
+      return arabicMaddah + arabicVowelMarks.u;
+    }
   }
 
   if (nextCharacter === "ょ") {
-    return arabicMaddah + arabicVowelMarks.o;
+    if ("じしち".includes(character)) {
+      return arabicVowelMarks.o;
+    }
+    else {
+      return arabicMaddah + arabicVowelMarks.o;
+    }
   }
 
   // Normal kana receive their corresponding Arabic vowel.
@@ -412,7 +427,7 @@ function getKanaVowel(character) {
     return "o";
   }
 
-  if ("んっ".includes(character)) {
+  if ("ん".includes(character)) {
     return "n";
   }
 
@@ -441,10 +456,11 @@ function getKanaVowelIncludingOmittedVowels(character) {
 
 function getKanaVowelWithSmallKana(character, nextCharacter) {
   if ("ふゔういじしち".includes(character) &&
-    ["ぁ", "ぃ", "ぇ", "ぉ"].includes(nextCharacter)
+    ["ぁ", "ぃ", "ぇ", "ぉ", "ぅ"].includes(nextCharacter)
   ) {
     if (nextCharacter === "ぁ") return "a";
     if (nextCharacter === "ぃ") return "i";
+    if (nextCharacter === "ぅ") return "u";
     if (nextCharacter === "ぇ") return "e";
     if (nextCharacter === "ぉ") return "o";
   }
